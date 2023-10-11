@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.2),
-    on octubre 10, 2023, at 21:06
+    on octubre 11, 2023, at 11:38
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -839,6 +839,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     continueRoutine = True
     # update component parameters for each repeat
     thisExp.addData('Circle.started', globalClock.getTime())
+    # Run 'Begin Routine' code from code
+    next_flash_time = core.getTime() + random.uniform(2, 4)  # Initial flash time
     # setup some python lists for storing info about the mouse
     mouse.x = []
     mouse.y = []
@@ -891,22 +893,27 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         dist = distance(mouse_pos, circle.pos)
         print(dist)
         
-        # Obtén la posición actual del círculo
-        circle_pos = circle.pos
-        
-        # Calcula la distancia entre la posición actual y el centro de la ventana
-        dist = ((circle_pos[0] - 0)**2 + (circle_pos[1] - 0)**2)**0.5
-        
-        # Actualiza el color del círculo en función de la distancia al centro
-        dist = ((circle.pos[0] - 0)**2 + (circle.pos[1] - 0)**2)**0.5
+        # Update figure color based on distance (adjust the values)
         if dist < 100:
-            circle.fillColor = 'red'
+            circle.fillColor = "green"
         elif dist < 200:
-            circle.fillColor = 'green'
+            circle.fillColor = "yellow"
         else:
-            circle.fillColor = 'blue'
+            circle.fillColor = "red"
         
         
+         # Check for fixation cross flash
+        if core.getTime() >= next_flash_time:
+            fixation_cross.draw()
+            win.flip()
+            #response = event.waitKeys(keyList=["left"], maxWait=1)  # Wait for a left mouse button click
+            #if response:
+                #response_time = response[0]
+                #response_times.append(response_time)
+                #mouse_pos = mouse.getPos()
+                #dist = distance(mouse_pos, figure.pos)
+                #distances.append(dist)
+            next_flash_time = core.getTime() + random.uniform(2, 4)  # Schedule the next flash
         
         
         # *circle* updates
