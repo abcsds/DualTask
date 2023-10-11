@@ -23,6 +23,7 @@ mouse = event.Mouse()
 # Initialize variables
 initial_mouse_pos = [0, 0]
 clock = core.Clock()
+cross_color = "white"
 
 # Define boundaries
 boundary_x_min = -win.size[0] / 2 + circle_radius
@@ -47,6 +48,9 @@ try:
 
         # Check for fixation cross flash
         if core.getTime() >= next_flash_time:
+            print(cross_color)
+            last_flash_time = next_flash_time  # Store last flashing time
+            fixation_cross.fillColor = "#888888"  # Asign the color gray (written in Hexadecimal)
             fixation_cross.draw()
             win.flip()
             response = event.waitKeys(keyList=["left"], maxWait=1)  # Wait for a left mouse button click
@@ -57,6 +61,11 @@ try:
                 dist = distance(mouse_pos, figure.pos)
                 distances.append(dist)
             next_flash_time = core.getTime() + random.uniform(2, 4)  # Schedule the next flash
+        
+        if core.getTime() >= last_flash_time + 0.2:  # last flash time + 200 ms
+            fixation_cross.fillColor = "White"  # Change back to white
+            fixation_cross.draw()
+            win.flip()
 
         # Get the current mouse position
         mouse_pos = mouse.getPos()
