@@ -1,8 +1,8 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-This experiment was created using PsychoPy3 Experiment Builder (v2023.2.2),
-    on octubre 11, 2023, at 11:38
+This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
+    on noviembre 15, 2023, at 10:22
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -37,7 +37,7 @@ from psychopy.hardware import keyboard
 # Ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__))
 # Store info about the experiment session
-psychopyVersion = '2023.2.2'
+psychopyVersion = '2023.2.3'
 expName = 'Dual_para'  # from the Builder filename that created this script
 expInfo = {
     'participant': f"{randint(0, 999999):06.0f}",
@@ -107,7 +107,7 @@ def setupData(expInfo, dataDir=None):
     thisExp = data.ExperimentHandler(
         name=expName, version='',
         extraInfo=expInfo, runtimeInfo=None,
-        originPath='D:\\documentos Alexa\\DualTask\\Para\\Dual_para.py',
+        originPath='D:\\Users\\Administrativo\\Documents\\GitHub\\DualTask\\Para\\Dual_para.py',
         savePickle=True, saveWideText=True,
         dataFileName=dataDir + os.sep + filename, sortColumns='time'
     )
@@ -314,7 +314,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     # Start Code - component code to be run after the window creation
     
-    # --- Initialize components for Routine "Welcome_screen_" ---
+    # --- Initialize components for Routine "Welcome_screen__2" ---
     Welcome = visual.TextStim(win=win, name='Welcome',
         text='Bienvenido ',
         font='Open Sans',
@@ -325,7 +325,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     # --- Initialize components for Routine "Instruccions" ---
     Instrucccions = visual.TextStim(win=win, name='Instrucccions',
-        text='A continuación presione la barra espaciadora o haga clic en el botón "Iniciar" para comenzar el experimento.  \n\n',
+        text='A continuación presione la barra espaciadora para comenzar el experimento.  \n\n',
         font='Open Sans',
         pos=(0, 0), height=36.0, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=None, 
@@ -354,8 +354,10 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     # --- Initialize components for Routine "Circle" ---
     # Run 'Begin Experiment' code from code
-    import random
+    #import random
+    from numpy import random
     import math
+    import psychopy.logging as log
     
     # Function to calculate distance between two points
     def distance(point1, point2):
@@ -363,12 +365,23 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         
     def rad2grad(rad):
         return rad*180/math.pi
+        
+    def grad2rad(grad):
+        return grad*math.pi/180
+        
+    def angle2origin (pos):
+        if pos[0] * pos[1] >= 0: 
+            angle = math.atan(pos[1] / pos[0]) + math.pi 
+        else:
+            angle = math.atan(pos[1] / pos[0])
+        return angle 
     
     # Define size of the circle
-    circle_radius = 108/2
-    circle_speed = 20  # Initial speed
+    circle_radius = 10
+    circle_speed = 15
     circle_pos = [0,0]
     circle_direction = random.uniform(0, 2 * math.pi)  # Initial direction (random)
+    angle_uncertainty = math.pi/2
     
     cross_color = "white"
     
@@ -378,24 +391,145 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     boundary_y_min = -win.size[1] / 2 + circle_radius
     boundary_y_max = win.size[1] / 2 - circle_radius
     
-        
+    # Define la duración del estímulo 
+    stimulus_duration = 0.5 
     
+    # promedio de las duraciones entre estimulos
+    between_stimuli = 2.0
+    
+    # define square_pos
+    square_pos = (0,0)
+    
+    # proportion of x in list of all letters 
+    n_x = 1
     circle = visual.ShapeStim(
         win=win, name='circle',
-        size=(108, 108), vertices='circle',
+        size=(circle_radius*2, circle_radius*2), vertices='circle',
         ori=0.0, pos=[0,0], anchor='center',
         lineWidth=1.0,     colorSpace='rgb',  lineColor='white', fillColor='white',
         opacity=None, depth=-1.0, interpolate=True)
     mouse = event.Mouse(win=win)
     x, y = [None, None]
     mouse.mouseClock = core.Clock()
-    cross = visual.TextStim(win=win, name='cross',
+    fixation_cross = visual.TextStim(win=win, name='fixation_cross',
         text='+',
         font='Open Sans',
         pos=(0, 0), height=48.0, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=None, 
         languageStyle='LTR',
         depth=-3.0);
+    Letter = visual.TextStim(win=win, name='Letter',
+        text='',
+        font='Open Sans',
+        pos=(0, 0), height=48.0, wrapWidth=None, ori=0.0, 
+        color='white', colorSpace='rgb', opacity=None, 
+        languageStyle='LTR',
+        depth=-4.0);
+    square = visual.Rect(
+        win=win, name='square',
+        width=(40, 40)[0], height=(40, 40)[1],
+        ori=0.0, pos=[0,0], anchor='center',
+        lineWidth=1.0,     colorSpace='rgb',  lineColor='white', fillColor='transparent',
+        opacity=None, depth=-5.0, interpolate=True)
+    
+    # --- Initialize components for Routine "NasaTLX" ---
+    text_mental_demand = visual.TextStim(win=win, name='text_mental_demand',
+        text='Exigencia mental',
+        font='Open Sans',
+        pos=(-480, 400), height=48.0, wrapWidth=None, ori=0.0, 
+        color='white', colorSpace='rgb', opacity=None, 
+        languageStyle='LTR',
+        depth=0.0);
+    slider_mental_demand = visual.Slider(win=win, name='slider_mental_demand',
+        startValue=None, size=(480, 10), pos=(-480, 270), units=win.units,
+        labels=("Baja", "", "Alta"), ticks=(-10, 0, 10), granularity=1.0,
+        style='rating', styleTweaks=(), opacity=None,
+        labelColor='LightGray', markerColor='Red', lineColor='White', colorSpace='rgb',
+        font='Open Sans', labelHeight=36.0,
+        flip=False, ori=0.0, depth=-1, readOnly=False)
+    text_fisical_demand = visual.TextStim(win=win, name='text_fisical_demand',
+        text='Exigencia física',
+        font='Open Sans',
+        pos=(-480, 80), height=48.0, wrapWidth=None, ori=0.0, 
+        color='white', colorSpace='rgb', opacity=None, 
+        languageStyle='LTR',
+        depth=-2.0);
+    slider_fisical_demand = visual.Slider(win=win, name='slider_fisical_demand',
+        startValue=None, size=(480, 10), pos=(-480, -70), units=win.units,
+        labels=("Baja", "", "Alta"), ticks=(-10, 0, 10), granularity=1.0,
+        style='rating', styleTweaks=(), opacity=None,
+        labelColor='LightGray', markerColor='Red', lineColor='White', colorSpace='rgb',
+        font='Open Sans', labelHeight=36.0,
+        flip=False, ori=0.0, depth=-3, readOnly=False)
+    text_temporal_demand = visual.TextStim(win=win, name='text_temporal_demand',
+        text='Exigencia temporal',
+        font='Open Sans',
+        pos=(-480, -270), height=48.0, wrapWidth=None, ori=0.0, 
+        color='white', colorSpace='rgb', opacity=None, 
+        languageStyle='LTR',
+        depth=-4.0);
+    sider_temporal_demand = visual.Slider(win=win, name='sider_temporal_demand',
+        startValue=None, size=(480, 10), pos=(-480, -360), units=win.units,
+        labels=("Baja", "", "Alta"), ticks=(-10, 0, 10), granularity=1.0,
+        style='rating', styleTweaks=(), opacity=None,
+        labelColor='LightGray', markerColor='Red', lineColor='White', colorSpace='rgb',
+        font='Open Sans', labelHeight=36.0,
+        flip=False, ori=0.0, depth=-5, readOnly=False)
+    text_effort_demand = visual.TextStim(win=win, name='text_effort_demand',
+        text='Exigencia eficiencia',
+        font='Open Sans',
+        pos=(480, 400), height=48.0, wrapWidth=None, ori=0.0, 
+        color='white', colorSpace='rgb', opacity=None, 
+        languageStyle='LTR',
+        depth=-6.0);
+    slider_effort_demand = visual.Slider(win=win, name='slider_effort_demand',
+        startValue=None, size=(480, 10), pos=(480, 270), units=win.units,
+        labels=("Baja", "", "Alta"), ticks=(-10, 0, 10), granularity=1.0,
+        style='rating', styleTweaks=(), opacity=None,
+        labelColor='LightGray', markerColor='Red', lineColor='White', colorSpace='rgb',
+        font='Open Sans', labelHeight=36.0,
+        flip=False, ori=0.0, depth=-7, readOnly=False)
+    text_performance_demand = visual.TextStim(win=win, name='text_performance_demand',
+        text='Exigencia rendimiento',
+        font='Open Sans',
+        pos=(480, 80), height=48.0, wrapWidth=None, ori=0.0, 
+        color='white', colorSpace='rgb', opacity=None, 
+        languageStyle='LTR',
+        depth=-8.0);
+    slider_performance_demand = visual.Slider(win=win, name='slider_performance_demand',
+        startValue=None, size=(480, 10), pos=(480, -70), units=win.units,
+        labels=("Baja", "", "Alta"), ticks=(-10, 0, 10), granularity=1.0,
+        style='rating', styleTweaks=(), opacity=None,
+        labelColor='LightGray', markerColor='Red', lineColor='White', colorSpace='rgb',
+        font='Open Sans', labelHeight=36.0,
+        flip=False, ori=0.0, depth=-9, readOnly=False)
+    text_frustation_demand = visual.TextStim(win=win, name='text_frustation_demand',
+        text='Exigencia frustración',
+        font='Open Sans',
+        pos=(480, -270), height=48.0, wrapWidth=None, ori=0.0, 
+        color='white', colorSpace='rgb', opacity=None, 
+        languageStyle='LTR',
+        depth=-10.0);
+    slider_frustation_demand = visual.Slider(win=win, name='slider_frustation_demand',
+        startValue=None, size=(480, 10), pos=(480, -360), units=win.units,
+        labels=("Baja", "", "Alta"), ticks=(-10, 0, 10), granularity=1.0,
+        style='rating', styleTweaks=(), opacity=None,
+        labelColor='LightGray', markerColor='Red', lineColor='White', colorSpace='rgb',
+        font='Open Sans', labelHeight=36.0,
+        flip=False, ori=0.0, depth=-11, readOnly=False)
+    key_resp_3 = keyboard.Keyboard()
+    
+    # --- Initialize components for Routine "Pause" ---
+    text_pause = visual.TextStim(win=win, name='text_pause',
+        text=f"""Este es el fin del ensayo X de 5
+    
+    [Presiona barra espaciadora para contiunar]
+    """,
+        font='Open Sans',
+        pos=(0, 0), height=64.0, wrapWidth=None, ori=0.0, 
+        color='white', colorSpace='rgb', opacity=None, 
+        languageStyle='LTR',
+        depth=0.0);
     
     # --- Initialize components for Routine "End" ---
     Terminado = visual.TextStim(win=win, name='Terminado',
@@ -417,13 +551,13 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # store the exact time the global clock started
     expInfo['expStart'] = data.getDateStr(format='%Y-%m-%d %Hh%M.%S.%f %z', fractionalSecondDigits=6)
     
-    # --- Prepare to start Routine "Welcome_screen_" ---
+    # --- Prepare to start Routine "Welcome_screen__2" ---
     continueRoutine = True
     # update component parameters for each repeat
-    thisExp.addData('Welcome_screen_.started', globalClock.getTime())
+    thisExp.addData('Welcome_screen__2.started', globalClock.getTime())
     # keep track of which components have finished
-    Welcome_screen_Components = [Welcome]
-    for thisComponent in Welcome_screen_Components:
+    Welcome_screen__2Components = [Welcome]
+    for thisComponent in Welcome_screen__2Components:
         thisComponent.tStart = None
         thisComponent.tStop = None
         thisComponent.tStartRefresh = None
@@ -435,7 +569,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     _timeToFirstFrame = win.getFutureFlipTime(clock="now")
     frameN = -1
     
-    # --- Run Routine "Welcome_screen_" ---
+    # --- Run Routine "Welcome_screen__2" ---
     routineForceEnded = not continueRoutine
     while continueRoutine and routineTimer.getTime() < 1.0:
         # get current time
@@ -490,7 +624,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             routineForceEnded = True
             break
         continueRoutine = False  # will revert to True if at least one component still running
-        for thisComponent in Welcome_screen_Components:
+        for thisComponent in Welcome_screen__2Components:
             if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
                 continueRoutine = True
                 break  # at least one component has not yet finished
@@ -499,11 +633,11 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
             win.flip()
     
-    # --- Ending Routine "Welcome_screen_" ---
-    for thisComponent in Welcome_screen_Components:
+    # --- Ending Routine "Welcome_screen__2" ---
+    for thisComponent in Welcome_screen__2Components:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
-    thisExp.addData('Welcome_screen_.stopped', globalClock.getTime())
+    thisExp.addData('Welcome_screen__2.stopped', globalClock.getTime())
     # using non-slip timing so subtract the expected duration of this Routine (unless ended on request)
     if routineForceEnded:
         routineTimer.reset()
@@ -835,232 +969,797 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # the Routine "Instruction_2" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset()
     
-    # --- Prepare to start Routine "Circle" ---
-    continueRoutine = True
-    # update component parameters for each repeat
-    thisExp.addData('Circle.started', globalClock.getTime())
-    # Run 'Begin Routine' code from code
-    next_flash_time = core.getTime() + random.uniform(2, 4)  # Initial flash time
-    # setup some python lists for storing info about the mouse
-    mouse.x = []
-    mouse.y = []
-    mouse.leftButton = []
-    mouse.midButton = []
-    mouse.rightButton = []
-    mouse.time = []
-    gotValidClick = False  # until a click is received
-    # keep track of which components have finished
-    CircleComponents = [circle, mouse, cross]
-    for thisComponent in CircleComponents:
-        thisComponent.tStart = None
-        thisComponent.tStop = None
-        thisComponent.tStartRefresh = None
-        thisComponent.tStopRefresh = None
-        if hasattr(thisComponent, 'status'):
-            thisComponent.status = NOT_STARTED
-    # reset timers
-    t = 0
-    _timeToFirstFrame = win.getFutureFlipTime(clock="now")
-    frameN = -1
+    # set up handler to look after randomisation of conditions etc
+    trials = data.TrialHandler(nReps=5.0, method='random', 
+        extraInfo=expInfo, originPath=-1,
+        trialList=[None],
+        seed=None, name='trials')
+    thisExp.addLoop(trials)  # add the loop to the experiment
+    thisTrial = trials.trialList[0]  # so we can initialise stimuli with some values
+    # abbreviate parameter names if possible (e.g. rgb = thisTrial.rgb)
+    if thisTrial != None:
+        for paramName in thisTrial:
+            globals()[paramName] = thisTrial[paramName]
     
-    # --- Run Routine "Circle" ---
-    routineForceEnded = not continueRoutine
-    while continueRoutine and routineTimer.getTime() < 10.0:
-        # get current time
-        t = routineTimer.getTime()
-        tThisFlip = win.getFutureFlipTime(clock=routineTimer)
-        tThisFlipGlobal = win.getFutureFlipTime(clock=None)
-        frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
-        # update/draw components on each frame
-        # Run 'Each Frame' code from code
-        # Calculate the new position based on speed and direction
-        circle_pos[0] += circle_speed * math.cos(circle_direction)
-        circle_pos[1] += circle_speed * math.sin(circle_direction)
+    for thisTrial in trials:
+        currentLoop = trials
+        thisExp.timestampOnFlip(win, 'thisRow.t')
+        # pause experiment here if requested
+        if thisExp.status == PAUSED:
+            pauseExperiment(
+                thisExp=thisExp, 
+                inputs=inputs, 
+                win=win, 
+                timers=[routineTimer], 
+                playbackComponents=[]
+        )
+        # abbreviate parameter names if possible (e.g. rgb = thisTrial.rgb)
+        if thisTrial != None:
+            for paramName in thisTrial:
+                globals()[paramName] = thisTrial[paramName]
         
+        # --- Prepare to start Routine "Circle" ---
+        continueRoutine = True
+        # update component parameters for each repeat
+        thisExp.addData('Circle.started', globalClock.getTime())
+        # Run 'Begin Routine' code from code
+        next_flash_time = core.getTime() + stimulus_duration + random.normal(loc=between_stimuli, scale=1) + 1 # Initial flash time
         
-        # Check for collisions with boundaries
-        if circle_pos[0] <= boundary_x_min or circle_pos[0] >= boundary_x_max:
-            circle_direction = math.pi - circle_direction
-        if circle_pos[1] <= boundary_y_min or circle_pos[1] >= boundary_y_max:
-            circle_direction = -circle_direction
+        stimulus = "X"
+        all_letters = ["M", "N", "Y", "A", "U", "H"]
         
-        # Randomly adjust speed and direction
-        if random.random() < 0.02:  # 2% chance
-            circle_speed = random.uniform(5, 20)
-            circle_direction += random.uniform(-math.pi/2, math.pi/2)
-         
-        mouse_pos = mouse.getPos()
-        dist = distance(mouse_pos, circle.pos)
-        print(dist)
+        all_letters = all_letters + (["X"] * n_x)
+        print (all_letters) 
         
-        # Update figure color based on distance (adjust the values)
-        if dist < 100:
-            circle.fillColor = "green"
-        elif dist < 200:
-            circle.fillColor = "yellow"
-        else:
-            circle.fillColor = "red"
+        last_flash_time = None 
+        offset_time = core.getTime() + stimulus_duration
         
+        # Set the mouse at the center of the screen
+        mouse.setPos([0,0])
         
-         # Check for fixation cross flash
-        if core.getTime() >= next_flash_time:
-            fixation_cross.draw()
-            win.flip()
-            #response = event.waitKeys(keyList=["left"], maxWait=1)  # Wait for a left mouse button click
-            #if response:
-                #response_time = response[0]
-                #response_times.append(response_time)
-                #mouse_pos = mouse.getPos()
-                #dist = distance(mouse_pos, figure.pos)
-                #distances.append(dist)
-            next_flash_time = core.getTime() + random.uniform(2, 4)  # Schedule the next flash
+        # Log the trial number
+        log.exp(f"Trial begin: {trials.thisN+1}")
         
-        
-        # *circle* updates
-        
-        # if circle is starting this frame...
-        if circle.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-            # keep track of start time/frame for later
-            circle.frameNStart = frameN  # exact frame index
-            circle.tStart = t  # local t and not account for scr refresh
-            circle.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(circle, 'tStartRefresh')  # time at next scr refresh
-            # add timestamp to datafile
-            thisExp.timestampOnFlip(win, 'circle.started')
-            # update status
-            circle.status = STARTED
-            circle.setAutoDraw(True)
-        
-        # if circle is active this frame...
-        if circle.status == STARTED:
-            # update params
-            circle.setPos(circle_pos, log=False)
-        
-        # if circle is stopping this frame...
-        if circle.status == STARTED:
-            # is it time to stop? (based on global clock, using actual start)
-            if tThisFlipGlobal > circle.tStartRefresh + 10-frameTolerance:
-                # keep track of stop time/frame for later
-                circle.tStop = t  # not accounting for scr refresh
-                circle.frameNStop = frameN  # exact frame index
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'circle.stopped')
-                # update status
-                circle.status = FINISHED
-                circle.setAutoDraw(False)
-        # *mouse* updates
-        
-        # if mouse is starting this frame...
-        if mouse.status == NOT_STARTED and t >= 0.0-frameTolerance:
-            # keep track of start time/frame for later
-            mouse.frameNStart = frameN  # exact frame index
-            mouse.tStart = t  # local t and not account for scr refresh
-            mouse.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(mouse, 'tStartRefresh')  # time at next scr refresh
-            # add timestamp to datafile
-            thisExp.addData('mouse.started', t)
-            # update status
-            mouse.status = STARTED
-            mouse.mouseClock.reset()
-            prevButtonState = mouse.getPressed()  # if button is down already this ISN'T a new click
-        
-        # if mouse is stopping this frame...
-        if mouse.status == STARTED:
-            # is it time to stop? (based on global clock, using actual start)
-            if tThisFlipGlobal > mouse.tStartRefresh + 10-frameTolerance:
-                # keep track of stop time/frame for later
-                mouse.tStop = t  # not accounting for scr refresh
-                mouse.frameNStop = frameN  # exact frame index
-                # add timestamp to datafile
-                thisExp.addData('mouse.stopped', t)
-                # update status
-                mouse.status = FINISHED
-        if mouse.status == STARTED:  # only update if started and not finished!
-            buttons = mouse.getPressed()
-            if buttons != prevButtonState:  # button state changed?
-                prevButtonState = buttons
-                if sum(buttons) > 0:  # state changed to a new click
-                    x, y = mouse.getPos()
-                    mouse.x.append(x)
-                    mouse.y.append(y)
-                    buttons = mouse.getPressed()
-                    mouse.leftButton.append(buttons[0])
-                    mouse.midButton.append(buttons[1])
-                    mouse.rightButton.append(buttons[2])
-                    mouse.time.append(mouse.mouseClock.getTime())
-        
-        # *cross* updates
-        
-        # if cross is starting this frame...
-        if cross.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
-            # keep track of start time/frame for later
-            cross.frameNStart = frameN  # exact frame index
-            cross.tStart = t  # local t and not account for scr refresh
-            cross.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(cross, 'tStartRefresh')  # time at next scr refresh
-            # add timestamp to datafile
-            thisExp.timestampOnFlip(win, 'cross.started')
-            # update status
-            cross.status = STARTED
-            cross.setAutoDraw(True)
-        
-        # if cross is active this frame...
-        if cross.status == STARTED:
-            # update params
-            cross.setColor(cross_color, colorSpace='rgb', log=False)
-        
-        # if cross is stopping this frame...
-        if cross.status == STARTED:
-            # is it time to stop? (based on global clock, using actual start)
-            if tThisFlipGlobal > cross.tStartRefresh + 10-frameTolerance:
-                # keep track of stop time/frame for later
-                cross.tStop = t  # not accounting for scr refresh
-                cross.frameNStop = frameN  # exact frame index
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'cross.stopped')
-                # update status
-                cross.status = FINISHED
-                cross.setAutoDraw(False)
-        
-        # check for quit (typically the Esc key)
-        if defaultKeyboard.getKeys(keyList=["escape"]):
-            thisExp.status = FINISHED
-        if thisExp.status == FINISHED or endExpNow:
-            endExperiment(thisExp, inputs=inputs, win=win)
-            return
-        
-        # check if all components have finished
-        if not continueRoutine:  # a component has requested a forced-end of Routine
-            routineForceEnded = True
-            break
-        continueRoutine = False  # will revert to True if at least one component still running
+        # setup some python lists for storing info about the mouse
+        mouse.x = []
+        mouse.y = []
+        mouse.leftButton = []
+        mouse.midButton = []
+        mouse.rightButton = []
+        mouse.time = []
+        gotValidClick = False  # until a click is received
+        # keep track of which components have finished
+        CircleComponents = [circle, mouse, fixation_cross, Letter, square]
         for thisComponent in CircleComponents:
-            if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
-                continueRoutine = True
-                break  # at least one component has not yet finished
+            thisComponent.tStart = None
+            thisComponent.tStop = None
+            thisComponent.tStartRefresh = None
+            thisComponent.tStopRefresh = None
+            if hasattr(thisComponent, 'status'):
+                thisComponent.status = NOT_STARTED
+        # reset timers
+        t = 0
+        _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+        frameN = -1
         
-        # refresh the screen
-        if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
-            win.flip()
-    
-    # --- Ending Routine "Circle" ---
-    for thisComponent in CircleComponents:
-        if hasattr(thisComponent, "setAutoDraw"):
-            thisComponent.setAutoDraw(False)
-    thisExp.addData('Circle.stopped', globalClock.getTime())
-    # store data for thisExp (ExperimentHandler)
-    thisExp.addData('mouse.x', mouse.x)
-    thisExp.addData('mouse.y', mouse.y)
-    thisExp.addData('mouse.leftButton', mouse.leftButton)
-    thisExp.addData('mouse.midButton', mouse.midButton)
-    thisExp.addData('mouse.rightButton', mouse.rightButton)
-    thisExp.addData('mouse.time', mouse.time)
-    thisExp.nextEntry()
-    # using non-slip timing so subtract the expected duration of this Routine (unless ended on request)
-    if routineForceEnded:
+        # --- Run Routine "Circle" ---
+        routineForceEnded = not continueRoutine
+        while continueRoutine and routineTimer.getTime() < 60.0:
+            # get current time
+            t = routineTimer.getTime()
+            tThisFlip = win.getFutureFlipTime(clock=routineTimer)
+            tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+            frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+            # update/draw components on each frame
+            # Run 'Each Frame' code from code
+            # Calculate the new position based on speed and direction
+            circle_pos[0] += circle_speed * math.cos(circle_direction)
+            circle_pos[1] += circle_speed * math.sin(circle_direction)
+            
+            
+            # Check for collisions with boundaries
+            if circle_pos[0] <= boundary_x_min or circle_pos[0] >= boundary_x_max:
+                circle_direction = math.pi - circle_direction
+            if circle_pos[1] <= boundary_y_min or circle_pos[1] >= boundary_y_max:
+                circle_direction = -circle_direction
+            
+            # Randomly adjust speed and direction
+            # chance of changing direction on every frame
+            if random.random() < 0.2:  # 20% chance of speed change on every frame
+                # circle_speed = random.uniform(5, 20)
+                circle_direction += random.uniform(-angle_uncertainty/2, angle_uncertainty/2)
+             
+            mouse_pos = mouse.getPos()
+            dist = distance(mouse_pos, circle.pos)
+            log.exp(f"Distance = {dist}")
+            
+            # Update figure color based on distance (adjust the values)
+            # if dist < 100:
+                # circle.fillColor = "green"
+            # elif dist < 200:
+                #circle.fillColor = "yellow"
+            # else:
+                # circle.fillColor = "red"
+            
+            # Update figure color based on distance (adjust the values)
+            if dist < 100:
+                square.borderColor = "limegreen"
+            elif dist < 200:
+                square.borderColor = "yellow"
+            else:
+                square.borderColor = "red"
+                
+            # print(stimulus)
+            
+            # Check for fixation cross flash
+            if core.getTime() >= next_flash_time:
+                last_flash_time = next_flash_time
+                stimulus = random.choice(all_letters)
+                win.flip()
+                log.exp(f"New stimulus letter: {stimulus}")
+                next_flash_time = core.getTime() + stimulus_duration + random.normal(loc=between_stimuli, scale=1)  # Schedule the next flash
+                offset_time = last_flash_time + stimulus_duration
+                print(offset_time)
+                
+            if core.getTime() >= offset_time:
+               stimulus = ""
+               win.flip()
+               log.exp(f"Removed stimulus letter")
+               
+            # Check square new position bassed of mouse direction 
+            square_pos = mouse.getPos()
+            
+            
+              
+            
+            
+            # *circle* updates
+            
+            # if circle is starting this frame...
+            if circle.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                circle.frameNStart = frameN  # exact frame index
+                circle.tStart = t  # local t and not account for scr refresh
+                circle.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(circle, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'circle.started')
+                # update status
+                circle.status = STARTED
+                circle.setAutoDraw(True)
+            
+            # if circle is active this frame...
+            if circle.status == STARTED:
+                # update params
+                circle.setPos(circle_pos, log=False)
+            
+            # if circle is stopping this frame...
+            if circle.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > circle.tStartRefresh + 60-frameTolerance:
+                    # keep track of stop time/frame for later
+                    circle.tStop = t  # not accounting for scr refresh
+                    circle.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'circle.stopped')
+                    # update status
+                    circle.status = FINISHED
+                    circle.setAutoDraw(False)
+            # *mouse* updates
+            
+            # if mouse is starting this frame...
+            if mouse.status == NOT_STARTED and t >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                mouse.frameNStart = frameN  # exact frame index
+                mouse.tStart = t  # local t and not account for scr refresh
+                mouse.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(mouse, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.addData('mouse.started', t)
+                # update status
+                mouse.status = STARTED
+                mouse.mouseClock.reset()
+                prevButtonState = mouse.getPressed()  # if button is down already this ISN'T a new click
+            
+            # if mouse is stopping this frame...
+            if mouse.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > mouse.tStartRefresh + 60-frameTolerance:
+                    # keep track of stop time/frame for later
+                    mouse.tStop = t  # not accounting for scr refresh
+                    mouse.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.addData('mouse.stopped', t)
+                    # update status
+                    mouse.status = FINISHED
+            if mouse.status == STARTED:  # only update if started and not finished!
+                buttons = mouse.getPressed()
+                if buttons != prevButtonState:  # button state changed?
+                    prevButtonState = buttons
+                    if sum(buttons) > 0:  # state changed to a new click
+                        x, y = mouse.getPos()
+                        mouse.x.append(x)
+                        mouse.y.append(y)
+                        buttons = mouse.getPressed()
+                        mouse.leftButton.append(buttons[0])
+                        mouse.midButton.append(buttons[1])
+                        mouse.rightButton.append(buttons[2])
+                        mouse.time.append(mouse.mouseClock.getTime())
+            
+            # *fixation_cross* updates
+            
+            # if fixation_cross is starting this frame...
+            if fixation_cross.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                fixation_cross.frameNStart = frameN  # exact frame index
+                fixation_cross.tStart = t  # local t and not account for scr refresh
+                fixation_cross.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(fixation_cross, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'fixation_cross.started')
+                # update status
+                fixation_cross.status = STARTED
+                fixation_cross.setAutoDraw(True)
+            
+            # if fixation_cross is active this frame...
+            if fixation_cross.status == STARTED:
+                # update params
+                fixation_cross.setColor(cross_color, colorSpace='rgb', log=False)
+            
+            # if fixation_cross is stopping this frame...
+            if fixation_cross.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > fixation_cross.tStartRefresh + .5-frameTolerance:
+                    # keep track of stop time/frame for later
+                    fixation_cross.tStop = t  # not accounting for scr refresh
+                    fixation_cross.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'fixation_cross.stopped')
+                    # update status
+                    fixation_cross.status = FINISHED
+                    fixation_cross.setAutoDraw(False)
+            
+            # *Letter* updates
+            
+            # if Letter is starting this frame...
+            if Letter.status == NOT_STARTED and tThisFlip >= 1.0-frameTolerance:
+                # keep track of start time/frame for later
+                Letter.frameNStart = frameN  # exact frame index
+                Letter.tStart = t  # local t and not account for scr refresh
+                Letter.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(Letter, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'Letter.started')
+                # update status
+                Letter.status = STARTED
+                Letter.setAutoDraw(True)
+            
+            # if Letter is active this frame...
+            if Letter.status == STARTED:
+                # update params
+                Letter.setText(stimulus, log=False)
+            
+            # if Letter is stopping this frame...
+            if Letter.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > Letter.tStartRefresh + 59-frameTolerance:
+                    # keep track of stop time/frame for later
+                    Letter.tStop = t  # not accounting for scr refresh
+                    Letter.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'Letter.stopped')
+                    # update status
+                    Letter.status = FINISHED
+                    Letter.setAutoDraw(False)
+            
+            # *square* updates
+            
+            # if square is starting this frame...
+            if square.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                square.frameNStart = frameN  # exact frame index
+                square.tStart = t  # local t and not account for scr refresh
+                square.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(square, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'square.started')
+                # update status
+                square.status = STARTED
+                square.setAutoDraw(True)
+            
+            # if square is active this frame...
+            if square.status == STARTED:
+                # update params
+                square.setPos(square_pos, log=False)
+            
+            # if square is stopping this frame...
+            if square.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > square.tStartRefresh + 60-frameTolerance:
+                    # keep track of stop time/frame for later
+                    square.tStop = t  # not accounting for scr refresh
+                    square.frameNStop = frameN  # exact frame index
+                    # add timestamp to datafile
+                    thisExp.timestampOnFlip(win, 'square.stopped')
+                    # update status
+                    square.status = FINISHED
+                    square.setAutoDraw(False)
+            
+            # check for quit (typically the Esc key)
+            if defaultKeyboard.getKeys(keyList=["escape"]):
+                thisExp.status = FINISHED
+            if thisExp.status == FINISHED or endExpNow:
+                endExperiment(thisExp, inputs=inputs, win=win)
+                return
+            
+            # check if all components have finished
+            if not continueRoutine:  # a component has requested a forced-end of Routine
+                routineForceEnded = True
+                break
+            continueRoutine = False  # will revert to True if at least one component still running
+            for thisComponent in CircleComponents:
+                if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+                    continueRoutine = True
+                    break  # at least one component has not yet finished
+            
+            # refresh the screen
+            if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+                win.flip()
+        
+        # --- Ending Routine "Circle" ---
+        for thisComponent in CircleComponents:
+            if hasattr(thisComponent, "setAutoDraw"):
+                thisComponent.setAutoDraw(False)
+        thisExp.addData('Circle.stopped', globalClock.getTime())
+        # store data for trials (TrialHandler)
+        trials.addData('mouse.x', mouse.x)
+        trials.addData('mouse.y', mouse.y)
+        trials.addData('mouse.leftButton', mouse.leftButton)
+        trials.addData('mouse.midButton', mouse.midButton)
+        trials.addData('mouse.rightButton', mouse.rightButton)
+        trials.addData('mouse.time', mouse.time)
+        # using non-slip timing so subtract the expected duration of this Routine (unless ended on request)
+        if routineForceEnded:
+            routineTimer.reset()
+        else:
+            routineTimer.addTime(-60.000000)
+        
+        # --- Prepare to start Routine "NasaTLX" ---
+        continueRoutine = True
+        # update component parameters for each repeat
+        thisExp.addData('NasaTLX.started', globalClock.getTime())
+        slider_mental_demand.reset()
+        slider_fisical_demand.reset()
+        sider_temporal_demand.reset()
+        slider_effort_demand.reset()
+        slider_performance_demand.reset()
+        slider_frustation_demand.reset()
+        key_resp_3.keys = []
+        key_resp_3.rt = []
+        _key_resp_3_allKeys = []
+        # keep track of which components have finished
+        NasaTLXComponents = [text_mental_demand, slider_mental_demand, text_fisical_demand, slider_fisical_demand, text_temporal_demand, sider_temporal_demand, text_effort_demand, slider_effort_demand, text_performance_demand, slider_performance_demand, text_frustation_demand, slider_frustation_demand, key_resp_3]
+        for thisComponent in NasaTLXComponents:
+            thisComponent.tStart = None
+            thisComponent.tStop = None
+            thisComponent.tStartRefresh = None
+            thisComponent.tStopRefresh = None
+            if hasattr(thisComponent, 'status'):
+                thisComponent.status = NOT_STARTED
+        # reset timers
+        t = 0
+        _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+        frameN = -1
+        
+        # --- Run Routine "NasaTLX" ---
+        routineForceEnded = not continueRoutine
+        while continueRoutine:
+            # get current time
+            t = routineTimer.getTime()
+            tThisFlip = win.getFutureFlipTime(clock=routineTimer)
+            tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+            frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+            # update/draw components on each frame
+            
+            # *text_mental_demand* updates
+            
+            # if text_mental_demand is starting this frame...
+            if text_mental_demand.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                text_mental_demand.frameNStart = frameN  # exact frame index
+                text_mental_demand.tStart = t  # local t and not account for scr refresh
+                text_mental_demand.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(text_mental_demand, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'text_mental_demand.started')
+                # update status
+                text_mental_demand.status = STARTED
+                text_mental_demand.setAutoDraw(True)
+            
+            # if text_mental_demand is active this frame...
+            if text_mental_demand.status == STARTED:
+                # update params
+                pass
+            
+            # *slider_mental_demand* updates
+            
+            # if slider_mental_demand is starting this frame...
+            if slider_mental_demand.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                slider_mental_demand.frameNStart = frameN  # exact frame index
+                slider_mental_demand.tStart = t  # local t and not account for scr refresh
+                slider_mental_demand.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(slider_mental_demand, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'slider_mental_demand.started')
+                # update status
+                slider_mental_demand.status = STARTED
+                slider_mental_demand.setAutoDraw(True)
+            
+            # if slider_mental_demand is active this frame...
+            if slider_mental_demand.status == STARTED:
+                # update params
+                pass
+            
+            # *text_fisical_demand* updates
+            
+            # if text_fisical_demand is starting this frame...
+            if text_fisical_demand.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                text_fisical_demand.frameNStart = frameN  # exact frame index
+                text_fisical_demand.tStart = t  # local t and not account for scr refresh
+                text_fisical_demand.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(text_fisical_demand, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'text_fisical_demand.started')
+                # update status
+                text_fisical_demand.status = STARTED
+                text_fisical_demand.setAutoDraw(True)
+            
+            # if text_fisical_demand is active this frame...
+            if text_fisical_demand.status == STARTED:
+                # update params
+                pass
+            
+            # *slider_fisical_demand* updates
+            
+            # if slider_fisical_demand is starting this frame...
+            if slider_fisical_demand.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                slider_fisical_demand.frameNStart = frameN  # exact frame index
+                slider_fisical_demand.tStart = t  # local t and not account for scr refresh
+                slider_fisical_demand.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(slider_fisical_demand, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'slider_fisical_demand.started')
+                # update status
+                slider_fisical_demand.status = STARTED
+                slider_fisical_demand.setAutoDraw(True)
+            
+            # if slider_fisical_demand is active this frame...
+            if slider_fisical_demand.status == STARTED:
+                # update params
+                pass
+            
+            # *text_temporal_demand* updates
+            
+            # if text_temporal_demand is starting this frame...
+            if text_temporal_demand.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                text_temporal_demand.frameNStart = frameN  # exact frame index
+                text_temporal_demand.tStart = t  # local t and not account for scr refresh
+                text_temporal_demand.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(text_temporal_demand, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'text_temporal_demand.started')
+                # update status
+                text_temporal_demand.status = STARTED
+                text_temporal_demand.setAutoDraw(True)
+            
+            # if text_temporal_demand is active this frame...
+            if text_temporal_demand.status == STARTED:
+                # update params
+                pass
+            
+            # *sider_temporal_demand* updates
+            
+            # if sider_temporal_demand is starting this frame...
+            if sider_temporal_demand.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                sider_temporal_demand.frameNStart = frameN  # exact frame index
+                sider_temporal_demand.tStart = t  # local t and not account for scr refresh
+                sider_temporal_demand.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(sider_temporal_demand, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'sider_temporal_demand.started')
+                # update status
+                sider_temporal_demand.status = STARTED
+                sider_temporal_demand.setAutoDraw(True)
+            
+            # if sider_temporal_demand is active this frame...
+            if sider_temporal_demand.status == STARTED:
+                # update params
+                pass
+            
+            # *text_effort_demand* updates
+            
+            # if text_effort_demand is starting this frame...
+            if text_effort_demand.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                text_effort_demand.frameNStart = frameN  # exact frame index
+                text_effort_demand.tStart = t  # local t and not account for scr refresh
+                text_effort_demand.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(text_effort_demand, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'text_effort_demand.started')
+                # update status
+                text_effort_demand.status = STARTED
+                text_effort_demand.setAutoDraw(True)
+            
+            # if text_effort_demand is active this frame...
+            if text_effort_demand.status == STARTED:
+                # update params
+                pass
+            
+            # *slider_effort_demand* updates
+            
+            # if slider_effort_demand is starting this frame...
+            if slider_effort_demand.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                slider_effort_demand.frameNStart = frameN  # exact frame index
+                slider_effort_demand.tStart = t  # local t and not account for scr refresh
+                slider_effort_demand.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(slider_effort_demand, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'slider_effort_demand.started')
+                # update status
+                slider_effort_demand.status = STARTED
+                slider_effort_demand.setAutoDraw(True)
+            
+            # if slider_effort_demand is active this frame...
+            if slider_effort_demand.status == STARTED:
+                # update params
+                pass
+            
+            # *text_performance_demand* updates
+            
+            # if text_performance_demand is starting this frame...
+            if text_performance_demand.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                text_performance_demand.frameNStart = frameN  # exact frame index
+                text_performance_demand.tStart = t  # local t and not account for scr refresh
+                text_performance_demand.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(text_performance_demand, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'text_performance_demand.started')
+                # update status
+                text_performance_demand.status = STARTED
+                text_performance_demand.setAutoDraw(True)
+            
+            # if text_performance_demand is active this frame...
+            if text_performance_demand.status == STARTED:
+                # update params
+                pass
+            
+            # *slider_performance_demand* updates
+            
+            # if slider_performance_demand is starting this frame...
+            if slider_performance_demand.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                slider_performance_demand.frameNStart = frameN  # exact frame index
+                slider_performance_demand.tStart = t  # local t and not account for scr refresh
+                slider_performance_demand.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(slider_performance_demand, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'slider_performance_demand.started')
+                # update status
+                slider_performance_demand.status = STARTED
+                slider_performance_demand.setAutoDraw(True)
+            
+            # if slider_performance_demand is active this frame...
+            if slider_performance_demand.status == STARTED:
+                # update params
+                pass
+            
+            # *text_frustation_demand* updates
+            
+            # if text_frustation_demand is starting this frame...
+            if text_frustation_demand.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                text_frustation_demand.frameNStart = frameN  # exact frame index
+                text_frustation_demand.tStart = t  # local t and not account for scr refresh
+                text_frustation_demand.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(text_frustation_demand, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'text_frustation_demand.started')
+                # update status
+                text_frustation_demand.status = STARTED
+                text_frustation_demand.setAutoDraw(True)
+            
+            # if text_frustation_demand is active this frame...
+            if text_frustation_demand.status == STARTED:
+                # update params
+                pass
+            
+            # *slider_frustation_demand* updates
+            
+            # if slider_frustation_demand is starting this frame...
+            if slider_frustation_demand.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                slider_frustation_demand.frameNStart = frameN  # exact frame index
+                slider_frustation_demand.tStart = t  # local t and not account for scr refresh
+                slider_frustation_demand.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(slider_frustation_demand, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'slider_frustation_demand.started')
+                # update status
+                slider_frustation_demand.status = STARTED
+                slider_frustation_demand.setAutoDraw(True)
+            
+            # if slider_frustation_demand is active this frame...
+            if slider_frustation_demand.status == STARTED:
+                # update params
+                pass
+            
+            # *key_resp_3* updates
+            waitOnFlip = False
+            
+            # if key_resp_3 is starting this frame...
+            if key_resp_3.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                key_resp_3.frameNStart = frameN  # exact frame index
+                key_resp_3.tStart = t  # local t and not account for scr refresh
+                key_resp_3.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(key_resp_3, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'key_resp_3.started')
+                # update status
+                key_resp_3.status = STARTED
+                # keyboard checking is just starting
+                waitOnFlip = True
+                win.callOnFlip(key_resp_3.clock.reset)  # t=0 on next screen flip
+                win.callOnFlip(key_resp_3.clearEvents, eventType='keyboard')  # clear events on next screen flip
+            if key_resp_3.status == STARTED and not waitOnFlip:
+                theseKeys = key_resp_3.getKeys(keyList=['space'], ignoreKeys=["escape"], waitRelease=False)
+                _key_resp_3_allKeys.extend(theseKeys)
+                if len(_key_resp_3_allKeys):
+                    key_resp_3.keys = _key_resp_3_allKeys[-1].name  # just the last key pressed
+                    key_resp_3.rt = _key_resp_3_allKeys[-1].rt
+                    key_resp_3.duration = _key_resp_3_allKeys[-1].duration
+                    # a response ends the routine
+                    continueRoutine = False
+            
+            # check for quit (typically the Esc key)
+            if defaultKeyboard.getKeys(keyList=["escape"]):
+                thisExp.status = FINISHED
+            if thisExp.status == FINISHED or endExpNow:
+                endExperiment(thisExp, inputs=inputs, win=win)
+                return
+            
+            # check if all components have finished
+            if not continueRoutine:  # a component has requested a forced-end of Routine
+                routineForceEnded = True
+                break
+            continueRoutine = False  # will revert to True if at least one component still running
+            for thisComponent in NasaTLXComponents:
+                if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+                    continueRoutine = True
+                    break  # at least one component has not yet finished
+            
+            # refresh the screen
+            if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+                win.flip()
+        
+        # --- Ending Routine "NasaTLX" ---
+        for thisComponent in NasaTLXComponents:
+            if hasattr(thisComponent, "setAutoDraw"):
+                thisComponent.setAutoDraw(False)
+        thisExp.addData('NasaTLX.stopped', globalClock.getTime())
+        trials.addData('slider_mental_demand.response', slider_mental_demand.getRating())
+        trials.addData('slider_mental_demand.rt', slider_mental_demand.getRT())
+        trials.addData('slider_fisical_demand.response', slider_fisical_demand.getRating())
+        trials.addData('slider_fisical_demand.rt', slider_fisical_demand.getRT())
+        trials.addData('sider_temporal_demand.response', sider_temporal_demand.getRating())
+        trials.addData('sider_temporal_demand.rt', sider_temporal_demand.getRT())
+        trials.addData('slider_effort_demand.response', slider_effort_demand.getRating())
+        trials.addData('slider_effort_demand.rt', slider_effort_demand.getRT())
+        trials.addData('slider_performance_demand.response', slider_performance_demand.getRating())
+        trials.addData('slider_performance_demand.rt', slider_performance_demand.getRT())
+        trials.addData('slider_frustation_demand.response', slider_frustation_demand.getRating())
+        trials.addData('slider_frustation_demand.rt', slider_frustation_demand.getRT())
+        # check responses
+        if key_resp_3.keys in ['', [], None]:  # No response was made
+            key_resp_3.keys = None
+        trials.addData('key_resp_3.keys',key_resp_3.keys)
+        if key_resp_3.keys != None:  # we had a response
+            trials.addData('key_resp_3.rt', key_resp_3.rt)
+            trials.addData('key_resp_3.duration', key_resp_3.duration)
+        # the Routine "NasaTLX" was not non-slip safe, so reset the non-slip timer
         routineTimer.reset()
-    else:
-        routineTimer.addTime(-10.000000)
+        
+        # --- Prepare to start Routine "Pause" ---
+        continueRoutine = True
+        # update component parameters for each repeat
+        thisExp.addData('Pause.started', globalClock.getTime())
+        # keep track of which components have finished
+        PauseComponents = [text_pause]
+        for thisComponent in PauseComponents:
+            thisComponent.tStart = None
+            thisComponent.tStop = None
+            thisComponent.tStartRefresh = None
+            thisComponent.tStopRefresh = None
+            if hasattr(thisComponent, 'status'):
+                thisComponent.status = NOT_STARTED
+        # reset timers
+        t = 0
+        _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+        frameN = -1
+        
+        # --- Run Routine "Pause" ---
+        routineForceEnded = not continueRoutine
+        while continueRoutine:
+            # get current time
+            t = routineTimer.getTime()
+            tThisFlip = win.getFutureFlipTime(clock=routineTimer)
+            tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+            frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+            # update/draw components on each frame
+            
+            # *text_pause* updates
+            
+            # if text_pause is starting this frame...
+            if text_pause.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                # keep track of start time/frame for later
+                text_pause.frameNStart = frameN  # exact frame index
+                text_pause.tStart = t  # local t and not account for scr refresh
+                text_pause.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(text_pause, 'tStartRefresh')  # time at next scr refresh
+                # add timestamp to datafile
+                thisExp.timestampOnFlip(win, 'text_pause.started')
+                # update status
+                text_pause.status = STARTED
+                text_pause.setAutoDraw(True)
+            
+            # if text_pause is active this frame...
+            if text_pause.status == STARTED:
+                # update params
+                pass
+            
+            # check for quit (typically the Esc key)
+            if defaultKeyboard.getKeys(keyList=["escape"]):
+                thisExp.status = FINISHED
+            if thisExp.status == FINISHED or endExpNow:
+                endExperiment(thisExp, inputs=inputs, win=win)
+                return
+            
+            # check if all components have finished
+            if not continueRoutine:  # a component has requested a forced-end of Routine
+                routineForceEnded = True
+                break
+            continueRoutine = False  # will revert to True if at least one component still running
+            for thisComponent in PauseComponents:
+                if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+                    continueRoutine = True
+                    break  # at least one component has not yet finished
+            
+            # refresh the screen
+            if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+                win.flip()
+        
+        # --- Ending Routine "Pause" ---
+        for thisComponent in PauseComponents:
+            if hasattr(thisComponent, "setAutoDraw"):
+                thisComponent.setAutoDraw(False)
+        thisExp.addData('Pause.stopped', globalClock.getTime())
+        # the Routine "Pause" was not non-slip safe, so reset the non-slip timer
+        routineTimer.reset()
+        thisExp.nextEntry()
+        
+        if thisSession is not None:
+            # if running in a Session with a Liaison client, send data up to now
+            thisSession.sendExperimentData()
+    # completed 5.0 repeats of 'trials'
+    
     
     # --- Prepare to start Routine "End" ---
     continueRoutine = True
