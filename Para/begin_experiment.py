@@ -3,7 +3,6 @@ import math
 import psychopy.logging as log
 import serial
 import time
-from pylsl import StreamInfo, StreamOutlet
 
 # Function to calculate distance between two points
 def distance(point1, point2):
@@ -21,10 +20,6 @@ def angle2origin(pos):
     else:
         angle = math.atan(pos[1] / pos[0])
     return angle
-# Setup LSL outlet
-info = StreamInfo("Psychopy", "Markers", 1, 0, "string", "PsychopyUUID0001")
-outlet = StreamOutlet(info)
-outlet.push_sample(["begin_experiment"])
 
 # Setup serial connection to arduino
 # Used for ttl triggers to EEG amp
