@@ -1,5 +1,9 @@
-arduino.write(b'p')
 outlet.push_sample([f"begin_routine_{{trials.thisN+1}}"])
+for i in range(5): # Marks start of experiment
+    arduino.write(b"p")
+    outlet.push_sample([f"sync_{i+1}"])
+    time.sleep(0.5)
+
 routine_start_time = core.getTime()
 next_flash_time = routine_start_time + stimulus_duration + random.normal(loc=between_stimuli, scale=1) + 1 # Initial flash time
 

@@ -28,11 +28,11 @@ outlet.push_sample(["begin_experiment"])
 
 # Setup serial connection to arduino
 # Used for ttl triggers to EEG amp
-arduino = serial.Serial("COM3", 9600)
-for i in rangne(5): # Marks start of experiment
+arduino = serial.Serial("COM5", 9600)
+for i in range(10): # Marks start of experiment
     arduino.write(b"p")
     outlet.push_sample([f"sync_{i+1}"])
-    time.sleep(0.01)
+    time.sleep(0.5)
 
 # Define size of the circle
 circle_radius = 10
