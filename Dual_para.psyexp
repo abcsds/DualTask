@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" ?>
-<PsychoPy2experiment encoding="utf-8" version="2023.2.3">
+<PsychoPy2experiment encoding="utf-8" version="2024.1.5">
   <Settings>
     <Param val="3" valType="str" updates="None" name="Audio latency priority"/>
     <Param val="ptb" valType="str" updates="None" name="Audio lib"/>
@@ -30,6 +30,7 @@
     <Param val="none" valType="str" updates="None" name="backgroundFit"/>
     <Param val="" valType="str" updates="None" name="backgroundImg"/>
     <Param val="avg" valType="str" updates="None" name="blendMode"/>
+    <Param val="float" valType="str" updates="None" name="clockFormat"/>
     <Param val="{'thisRow.t': 'priority.CRITICAL', 'expName': 'priority.LOW'}" valType="dict" updates="None" name="colPriority"/>
     <Param val="$[0,0,0]" valType="color" updates="None" name="color"/>
     <Param val="rgb" valType="str" updates="None" name="colorSpace"/>
@@ -46,10 +47,13 @@
     <Param val="Dual_para" valType="str" updates="None" name="expName"/>
     <Param val="on Sync" valType="str" updates="None" name="exportHTML"/>
     <Param val="None" valType="str" updates="None" name="eyetracker"/>
+    <Param val="" valType="code" updates="None" name="frameRate"/>
+    <Param val="Attempting to measure frame rate of screen, please wait..." valType="str" updates="None" name="frameRateMsg"/>
     <Param val="127.0.0.1" valType="str" updates="None" name="gpAddress"/>
     <Param val="4242" valType="num" updates="None" name="gpPort"/>
     <Param val="ioHub" valType="str" updates="None" name="keyboardBackend"/>
     <Param val="exp" valType="code" updates="None" name="logging level"/>
+    <Param val="True" valType="bool" updates="None" name="measureFrameRate"/>
     <Param val="('MIDDLE_BUTTON',)" valType="list" updates="None" name="mgBlink"/>
     <Param val="CONTINUOUS" valType="str" updates="None" name="mgMove"/>
     <Param val="0.5" valType="num" updates="None" name="mgSaccade"/>
@@ -65,6 +69,8 @@
     <Param val="1000" valType="num" updates="None" name="plPupilRemoteTimeoutMs"/>
     <Param val="False" valType="bool" updates="None" name="plPupillometryOnly"/>
     <Param val="psychopy_iohub_surface" valType="str" updates="None" name="plSurfaceName"/>
+    <Param val="1" valType="code" updates="None" name="runMode"/>
+    <Param val="False" valType="bool" updates="None" name="rush"/>
     <Param val="time" valType="str" updates="None" name="sortColumns"/>
     <Param val="" valType="str" updates="None" name="tbLicenseFile"/>
     <Param val="" valType="str" updates="None" name="tbModel"/>
@@ -112,11 +118,13 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="A continuación presione la barra espaciadora para continuar.  &amp;#10;&amp;#10;" valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
       <KeyboardComponent name="key_resp" plugin="None">
         <Param val="'space'" valType="list" updates="constant" name="allowedKeys"/>
         <Param val="" valType="str" updates="constant" name="correctAns"/>
+        <Param val="" valType="str" updates="None" name="deviceLabel"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="True" valType="bool" updates="constant" name="discard previous"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
@@ -153,17 +161,17 @@
       <CodeComponent name="code" plugin="None">
         <Param val="from pylsl import StreamInfo, StreamOutlet&amp;#10;&amp;#10;# Setup LSL outlet&amp;#10;info = StreamInfo(&quot;Psychopy&quot;, &quot;Markers&quot;, 1, 0, &quot;string&quot;, &quot;PsychopyUUID0001&quot;)&amp;#10;outlet = StreamOutlet(info)&amp;#10;outlet.push_sample([&quot;begin_experiment&quot;])&amp;#10;" valType="extendedCode" updates="constant" name="Before Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="from numpy import random&amp;#10;import math&amp;#10;import psychopy.logging as log&amp;#10;import serial&amp;#10;import time&amp;#10;&amp;#10;# Function to calculate distance between two points&amp;#10;def distance(point1, point2):&amp;#10;    return ((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)**0.5&amp;#10;    &amp;#10;def rad2grad(rad):&amp;#10;    return rad*180/math.pi&amp;#10;    &amp;#10;def grad2rad(grad):&amp;#10;    return grad*math.pi/180&amp;#10;    &amp;#10;def angle2origin(pos):&amp;#10;    if pos[0] &gt;= 0: &amp;#10;        angle = math.atan(pos[1] / pos[0]) + math.pi &amp;#10;    else:&amp;#10;        angle = math.atan(pos[1] / pos[0])&amp;#10;    return angle&amp;#10;&amp;#10;# Setup serial connection to arduino&amp;#10;# Used for ttl triggers to EEG amp&amp;#10;arduino = serial.Serial(&quot;COM5&quot;, 9600)&amp;#10;for i in range(10): # Marks start of experiment&amp;#10;    arduino.write(b&quot;p&quot;)&amp;#10;    outlet.push_sample([f&quot;sync_{i+1}&quot;])&amp;#10;    time.sleep(0.5)&amp;#10;&amp;#10;# Define size of the circle&amp;#10;circle_radius = 10&amp;#10;circle_speed = 15&amp;#10;angle_uncertainty = math.pi/2&amp;#10;&amp;#10;cross_color = &quot;white&quot;&amp;#10;&amp;#10;# Define boundaries&amp;#10;boundary_x_min = -win.size[0] / 2 + circle_radius&amp;#10;boundary_x_max = win.size[0] / 2 - circle_radius&amp;#10;boundary_y_min = -win.size[1] / 2 + circle_radius&amp;#10;boundary_y_max = win.size[1] / 2 - circle_radius&amp;#10;&amp;#10;# Define maximum tolerable distance from screen center&amp;#10;x_min = -win.size[0] / 2&amp;#10;x_max = win.size[1] / 2&amp;#10;y_min = -win.size[0] / 2&amp;#10;y_max = win.size[1] / 2&amp;#10;&amp;#10;# Define la duración del estímulo &amp;#10;stimulus_duration = 0.5 &amp;#10;&amp;#10;# promedio de las duraciones entre estimulos&amp;#10;between_stimuli = 2.0&amp;#10;&amp;#10;# proportion of x in list of all letters &amp;#10;n_x = 2" valType="extendedCode" updates="constant" name="Begin Experiment"/>
+        <Param val="from numpy import random&amp;#10;import math&amp;#10;import psychopy.logging as log&amp;#10;import time&amp;#10;&amp;#10;# Function to calculate distance between two points&amp;#10;def distance(point1, point2):&amp;#10;    return ((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)**0.5&amp;#10;    &amp;#10;def rad2grad(rad):&amp;#10;    return rad*180/math.pi&amp;#10;    &amp;#10;def grad2rad(grad):&amp;#10;    return grad*math.pi/180&amp;#10;    &amp;#10;def angle2origin(pos):&amp;#10;    if pos[0] &gt;= 0: &amp;#10;        angle = math.atan(pos[1] / pos[0]) + math.pi &amp;#10;    else:&amp;#10;        angle = math.atan(pos[1] / pos[0])&amp;#10;    return angle&amp;#10;&amp;#10;# Experiment begin&amp;#10;outlet.push_sample([f&quot;Begin experiment&quot;])&amp;#10;&amp;#10;# Define size of the circle&amp;#10;circle_radius = 10&amp;#10;circle_speed = 15&amp;#10;angle_uncertainty = math.pi/2&amp;#10;&amp;#10;cross_color = &quot;white&quot;&amp;#10;&amp;#10;# Define boundaries&amp;#10;boundary_x_min = -win.size[0] / 2 + circle_radius&amp;#10;boundary_x_max = win.size[0] / 2 - circle_radius&amp;#10;boundary_y_min = -win.size[1] / 2 + circle_radius&amp;#10;boundary_y_max = win.size[1] / 2 - circle_radius&amp;#10;&amp;#10;# Define maximum tolerable distance from screen center&amp;#10;x_min = -win.size[0] / 2&amp;#10;x_max = win.size[1] / 2&amp;#10;y_min = -win.size[0] / 2&amp;#10;y_max = win.size[1] / 2&amp;#10;&amp;#10;# Define la duración del estímulo &amp;#10;stimulus_duration = 0.5 &amp;#10;&amp;#10;# promedio de las duraciones entre estimulos&amp;#10;between_stimuli = 2.0&amp;#10;&amp;#10;# proportion of x in list of all letters &amp;#10;n_x = 2" valType="extendedCode" updates="constant" name="Begin Experiment"/>
         <Param val="import {core, event, visual} from 'psychopy';&amp;#10;win = new visual.Window({&quot;size&quot;: [800, 600], &quot;color&quot;: &quot;white&quot;});&amp;#10;my_circle = new visual.Circle(psychoJS.window, {&quot;radius&quot;: 0.2, &quot;fillColor&quot;: &quot;red&quot;});&amp;#10;my_circle.draw();&amp;#10;psychoJS.window.flip();&amp;#10;psychoJS.eventManager.waitKeys();&amp;#10;psychoJS.window.close();&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
-        <Param val="outlet.push_sample([f&quot;begin_routine_{{trials.thisN+1}}&quot;])&amp;#10;for i in range(5): # Marks start of experiment&amp;#10;    arduino.write(b&quot;p&quot;)&amp;#10;    outlet.push_sample([f&quot;sync_{i+1}&quot;])&amp;#10;    time.sleep(0.5)&amp;#10;&amp;#10;routine_start_time = core.getTime()&amp;#10;next_flash_time = routine_start_time + stimulus_duration + random.normal(loc=between_stimuli, scale=1) + 1 # Initial flash time&amp;#10;&amp;#10;stimulus = &quot;X&quot;&amp;#10;all_letters = [&quot;M&quot;, &quot;N&quot;, &quot;Y&quot;, &quot;A&quot;, &quot;U&quot;, &quot;H&quot;]&amp;#10;&amp;#10;all_letters = all_letters + ([&quot;X&quot;] * n_x)&amp;#10;&amp;#10;last_flash_time = None &amp;#10;offset_time = core.getTime() + stimulus_duration&amp;#10;&amp;#10;# Set the mouse and target at the center of the screen&amp;#10;mouse.setPos([0,0])&amp;#10;circle_pos = [0,0]&amp;#10;circle.setPos([0,0])&amp;#10;circle_direction = random.uniform(0, 2 * math.pi)  # Initial direction (random)&amp;#10;&amp;#10;# Log the trial number&amp;#10;log.exp(f&quot;Trial begin: {trials.thisN+1}&quot;)&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
+        <Param val="outlet.push_sample([f&quot;begin_routine_{{trials.thisN+1}}&quot;])&amp;#10;&amp;#10;routine_start_time = core.getTime()&amp;#10;next_flash_time = routine_start_time + stimulus_duration + random.normal(loc=between_stimuli, scale=1) + 1 # Initial flash time&amp;#10;&amp;#10;stimulus = &quot;X&quot;&amp;#10;all_letters = [&quot;M&quot;, &quot;N&quot;, &quot;Y&quot;, &quot;A&quot;, &quot;U&quot;, &quot;H&quot;]&amp;#10;&amp;#10;all_letters = all_letters + ([&quot;X&quot;] * n_x)&amp;#10;&amp;#10;last_flash_time = None &amp;#10;offset_time = core.getTime() + stimulus_duration&amp;#10;&amp;#10;# Set the mouse and target at the center of the screen&amp;#10;mouse.setPos([0,0])&amp;#10;circle_pos = [0,0]&amp;#10;circle.setPos([0,0])&amp;#10;circle_direction = random.uniform(0, 2 * math.pi)  # Initial direction (random)&amp;#10;&amp;#10;# Log the trial number&amp;#10;log.exp(f&quot;Trial begin: {trials.thisN+1}&quot;)&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>
         <Param val="Py" valType="str" updates="None" name="Code Type"/>
-        <Param val="# Only start moving after one second (fixation cross)&amp;#10;if core.getTime() &gt;= routine_start_time + 1:&amp;#10;    # Calculate the new position based on speed and direction&amp;#10;    circle_pos[0] += circle_speed * math.cos(circle_direction)&amp;#10;    circle_pos[1] += circle_speed * math.sin(circle_direction)&amp;#10;&amp;#10;# Check square new position bassed of mouse direction &amp;#10;square_pos = mouse.getPos()&amp;#10;win.flip()&amp;#10;&amp;#10;# Randomly adjust direction&amp;#10;if random.random() &lt; 0.2:  # 20% chance of direction change on every frame&amp;#10;    circle_direction += random.uniform(-angle_uncertainty/2, angle_uncertainty/2)&amp;#10;&amp;#10;# Check for collisions with boundaries&amp;#10;# if circle_pos[0] &lt;= boundary_x_min or circle_pos[0] &gt;= boundary_x_max:&amp;#10;#     circle_direction = math.pi - circle_direction&amp;#10;# if circle_pos[1] &lt;= boundary_y_min or circle_pos[1] &gt;= boundary_y_max:&amp;#10;#     circle_direction = -circle_direction&amp;#10;&amp;#10;# Check for out of bounds conditions&amp;#10;#out_of_bounds = circle_pos[0] &lt;= x_min or circle_pos[0] &gt;= x_max&amp;#10;#out_of_bounds = out_of_bounds or circle_pos[1] &lt;= y_min or circle_pos[1] &gt;= y_max&amp;#10;out_of_bounds = circle_pos[0] &lt;= boundary_x_min or circle_pos[0] &gt;= boundary_x_max&amp;#10;out_of_bounds = out_of_bounds or circle_pos[1] &lt;= boundary_y_min or circle_pos[1] &gt;= boundary_y_max&amp;#10;if out_of_bounds:&amp;#10;    circle_direction = angle2origin(circle.pos)&amp;#10;&amp;#10;mouse_pos = mouse.getPos()&amp;#10;dist = distance(mouse_pos, circle.pos)&amp;#10;log.exp(f&quot;Distance = {dist}&quot;)&amp;#10;&amp;#10;# Update figure color based on distance (adjust the values)&amp;#10;if dist &lt; 100:&amp;#10;    square.borderColor = &quot;limegreen&quot;&amp;#10;elif dist &lt; 200:&amp;#10;    square.borderColor = &quot;yellow&quot;&amp;#10;else:&amp;#10;    square.borderColor = &quot;red&quot;&amp;#10;&amp;#10;# Check for fixation cross flash&amp;#10;if core.getTime() &gt;= next_flash_time:&amp;#10;    last_flash_time = next_flash_time&amp;#10;    stimulus = random.choice(all_letters)&amp;#10;    win.flip()&amp;#10;    log.exp(f&quot;New stimulus letter: {stimulus}&quot;)&amp;#10;    next_flash_time = core.getTime() + stimulus_duration + random.normal(loc=between_stimuli, scale=1)  # Schedule the next flash&amp;#10;    offset_time = last_flash_time + stimulus_duration&amp;#10;    &amp;#10;if core.getTime() &gt;= offset_time:&amp;#10;   stimulus = &quot;&quot;&amp;#10;   win.flip()&amp;#10;   # log.exp(f&quot;Removed stimulus letter&quot;)&amp;#10;&amp;#10;&amp;#10;&amp;#10;  &amp;#10;" valType="extendedCode" updates="constant" name="Each Frame"/>
+        <Param val="# Only start moving after one second (fixation cross)&amp;#10;if core.getTime() &gt;= routine_start_time + 1:&amp;#10;    # Calculate the new position based on speed and direction&amp;#10;    circle_pos[0] += circle_speed * math.cos(circle_direction)&amp;#10;    circle_pos[1] += circle_speed * math.sin(circle_direction)&amp;#10;&amp;#10;# Check square new position bassed of mouse direction &amp;#10;square_pos = mouse.getPos()&amp;#10;win.flip()&amp;#10;&amp;#10;# Randomly adjust direction&amp;#10;if random.random() &lt; 0.2:  # 20% chance of direction change on every frame&amp;#10;    circle_direction += random.uniform(-angle_uncertainty/2, angle_uncertainty/2)&amp;#10;&amp;#10;# Check for out of bounds conditions&amp;#10;out_of_bounds = circle_pos[0] &lt;= boundary_x_min or circle_pos[0] &gt;= boundary_x_max&amp;#10;out_of_bounds = out_of_bounds or circle_pos[1] &lt;= boundary_y_min or circle_pos[1] &gt;= boundary_y_max&amp;#10;if out_of_bounds:&amp;#10;    circle_direction = angle2origin(circle.pos)&amp;#10;&amp;#10;mouse_pos = mouse.getPos()&amp;#10;dist = distance(mouse_pos, circle.pos)&amp;#10;log.exp(f&quot;Distance = {dist}&quot;)&amp;#10;&amp;#10;# Update figure color based on distance (adjust the values)&amp;#10;if dist &lt; 100:&amp;#10;    square.borderColor = &quot;limegreen&quot;&amp;#10;elif dist &lt; 200:&amp;#10;    square.borderColor = &quot;yellow&quot;&amp;#10;else:&amp;#10;    square.borderColor = &quot;red&quot;&amp;#10;&amp;#10;# Check for fixation cross flash&amp;#10;if core.getTime() &gt;= next_flash_time:&amp;#10;    last_flash_time = next_flash_time&amp;#10;    stimulus = random.choice(all_letters)&amp;#10;    win.flip()&amp;#10;    log.exp(f&quot;New stimulus letter: {stimulus}&quot;)&amp;#10;    next_flash_time = core.getTime() + stimulus_duration + random.normal(loc=between_stimuli, scale=1)  # Schedule the next flash&amp;#10;    offset_time = last_flash_time + stimulus_duration&amp;#10;    &amp;#10;if core.getTime() &gt;= offset_time:&amp;#10;   stimulus = &quot;&quot;&amp;#10;   win.flip()&amp;#10;   # log.exp(f&quot;Removed stimulus letter&quot;)&amp;#10;&amp;#10;&amp;#10;&amp;#10;  &amp;#10;" valType="extendedCode" updates="constant" name="Each Frame"/>
         <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
-        <Param val="arduino.close()" valType="extendedCode" updates="constant" name="End Experiment"/>
+        <Param val="" valType="extendedCode" updates="constant" name="End Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Routine"/>
-        <Param val="outlet.push_sample([f&quot;end_routine_{{trials.thisN+1}}&quot;])&amp;#10;for i in range(4): # Marks start of experiment&amp;#10;    arduino.write(b&quot;p&quot;)&amp;#10;    outlet.push_sample([f&quot;sync_{i+1}&quot;])&amp;#10;    time.sleep(0.5)" valType="extendedCode" updates="constant" name="End Routine"/>
+        <Param val="outlet.push_sample([f&quot;end_routine_{{trials.thisN+1}}&quot;])" valType="extendedCode" updates="constant" name="End Routine"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="code" valType="code" updates="None" name="name"/>
       </CodeComponent>
@@ -212,6 +220,7 @@
         <Param val="60" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="list" updates="constant" name="vertices"/>
       </PolygonComponent>
       <TextComponent name="fixation_cross" plugin="None">
@@ -237,6 +246,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="+" valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
       <PolygonComponent name="circle" plugin="None">
@@ -264,6 +274,7 @@
         <Param val="59" valType="code" updates="constant" name="stopVal"/>
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="list" updates="constant" name="vertices"/>
       </PolygonComponent>
       <TextComponent name="Letter" plugin="None">
@@ -289,6 +300,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="$stimulus" valType="str" updates="set every frame" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
     </Routine>
@@ -331,6 +343,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="+" valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
     </Routine>
@@ -373,11 +386,13 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="A continuación se dará inicio al experimento. Tendrás dos tareas:&amp;#10;&amp;#10; - Sigue el circulo con el puntero y &amp;#10; - Da clic con el mouse cada vez que aparezca la letra &quot;X&quot;.&amp;#10;&amp;#10;Al finalizar deberás responder la escala de cómo te sentiste durante el experimento. Cuando contestes precionar la barra espaceadora para continuar.&amp;#10;&amp;#10;Si las instrucciones están claras preciona la barra espaceadora para comenzar.&amp;#10;&amp;#10;&amp;#10;&amp;#10;&amp;#10;" valType="str" updates="constant" name="text"/>
         <Param val="pix" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="1000" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
       <KeyboardComponent name="key_resp_2" plugin="None">
         <Param val="'space'" valType="list" updates="constant" name="allowedKeys"/>
         <Param val="" valType="str" updates="constant" name="correctAns"/>
+        <Param val="" valType="str" updates="None" name="deviceLabel"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="True" valType="bool" updates="constant" name="discard previous"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
@@ -434,6 +449,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="Ha finalizado el experimento, gracias por participar" valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
     </Routine>
@@ -476,11 +492,13 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="¡Te damos la bienvenida!&amp;#10;&amp;#10;Presiona la barra espaceadora para continuar..." valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="1000" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
       <KeyboardComponent name="key_resp_welcome" plugin="None">
         <Param val="'space'" valType="list" updates="constant" name="allowedKeys"/>
         <Param val="" valType="str" updates="constant" name="correctAns"/>
+        <Param val="" valType="str" updates="None" name="deviceLabel"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="True" valType="bool" updates="constant" name="discard previous"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
@@ -537,6 +555,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="Exigencia mental" valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
       <SliderComponent name="slider_mental_demand" plugin="None">
@@ -574,6 +593,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="(-10, 0, 10)" valType="list" updates="constant" name="ticks"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
       </SliderComponent>
       <TextComponent name="text_fisical_demand" plugin="None">
         <Param val="white" valType="color" updates="constant" name="color"/>
@@ -598,6 +618,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="Exigencia física" valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
       <SliderComponent name="slider_fisical_demand" plugin="None">
@@ -635,6 +656,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="(-10, 0, 10)" valType="list" updates="constant" name="ticks"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
       </SliderComponent>
       <TextComponent name="text_temporal_demand" plugin="None">
         <Param val="white" valType="color" updates="constant" name="color"/>
@@ -659,6 +681,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="Exigencia temporal" valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
       <SliderComponent name="sider_temporal_demand" plugin="None">
@@ -696,6 +719,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="(-10, 0, 10)" valType="list" updates="constant" name="ticks"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
       </SliderComponent>
       <TextComponent name="text_effort_demand" plugin="None">
         <Param val="white" valType="color" updates="constant" name="color"/>
@@ -720,6 +744,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="Esfuerzo" valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
       <SliderComponent name="slider_effort_demand" plugin="None">
@@ -757,6 +782,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="(-10, 0, 10)" valType="list" updates="constant" name="ticks"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
       </SliderComponent>
       <TextComponent name="text_performance_demand" plugin="None">
         <Param val="white" valType="color" updates="constant" name="color"/>
@@ -781,6 +807,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="Rendimiento" valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
       <SliderComponent name="slider_performance_demand" plugin="None">
@@ -818,6 +845,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="(-10, 0, 10)" valType="list" updates="constant" name="ticks"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
       </SliderComponent>
       <TextComponent name="text_frustation_demand" plugin="None">
         <Param val="white" valType="color" updates="constant" name="color"/>
@@ -842,6 +870,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="Nivel de frustración" valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
       <SliderComponent name="slider_frustation_demand" plugin="None">
@@ -879,10 +908,12 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="(-10, 0, 10)" valType="list" updates="constant" name="ticks"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
       </SliderComponent>
       <KeyboardComponent name="key_resp_3" plugin="None">
         <Param val="'space'" valType="list" updates="constant" name="allowedKeys"/>
         <Param val="" valType="str" updates="constant" name="correctAns"/>
+        <Param val="" valType="str" updates="None" name="deviceLabel"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="True" valType="bool" updates="constant" name="discard previous"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
@@ -939,11 +970,13 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="$f&quot;&quot;&quot;Este es el fin del ensayo {trials.thisN+1} de 5&amp;#10;&amp;#10;[Presiona barra espaciadora para contiunar]&amp;#10;&quot;&quot;&quot;" valType="str" updates="set every repeat" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
       <KeyboardComponent name="key_resp_pause" plugin="None">
         <Param val="'space'" valType="list" updates="constant" name="allowedKeys"/>
         <Param val="" valType="str" updates="constant" name="correctAns"/>
+        <Param val="" valType="str" updates="None" name="deviceLabel"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="True" valType="bool" updates="constant" name="discard previous"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
@@ -1000,6 +1033,7 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="Al finalizar responde seleccionando en cada una de las barras cómo te sentiste durante el experimento y da clic en la barra espaceadora para continuar con el siguiente intento." valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
     </Routine>
@@ -1042,11 +1076,13 @@
         <Param val="True" valType="bool" updates="None" name="syncScreenRefresh"/>
         <Param val="Si has comprendido las instrucciones da clic en la barra espaceadora para comenzar&amp;#10;" valType="str" updates="constant" name="text"/>
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
+        <Param val="" valType="code" updates="None" name="validator"/>
         <Param val="" valType="num" updates="constant" name="wrapWidth"/>
       </TextComponent>
       <KeyboardComponent name="key_resp_4" plugin="None">
         <Param val="'space'" valType="list" updates="constant" name="allowedKeys"/>
         <Param val="" valType="str" updates="constant" name="correctAns"/>
+        <Param val="" valType="str" updates="None" name="deviceLabel"/>
         <Param val="False" valType="bool" updates="None" name="disabled"/>
         <Param val="True" valType="bool" updates="constant" name="discard previous"/>
         <Param val="" valType="code" updates="None" name="durationEstim"/>
