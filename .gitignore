@@ -6,3 +6,6 @@ index.html
 .venv
 !data/.gitkeep
 data
+*.log
+*.csv
+*.psydat

@@ -1,12 +1,21 @@
 # Dual Task
 
- task for dual attention paradigm. Task 1 is a persecution task and task 2 is a Go-NoGo task.
+Task for dual attention paradigm. Task 1 is a cursor persecution task and task 2 is a Go-NoGo task. Designed for Psychopy (2024.1.5). Requires pointer device (mouse suggested).
 
-## Requirements
+## Parameters
 
-- Psychopy (2023.2.3)
-- pylsl 
+Motion of task 1 target has 20% chance of direction change on every frame. Probability of task 2 target deppends on proportion between  ammount of all non-target letters `all_letters` and the target multiplier `n_x`. Time of next target is a normal distribution centered at `between_stimuli` +/- 1 sec.
 
-# Tarea Dual
-
-Tarea dual de atención en Psychopy (2023.2.3). La tarea 1 es una tarea de persecución y la tarea 2 es una tarea de Go-NoGo.
+```python
+circle_radius = 10
+circle_speed = 15
+angle_uncertainty = math.pi/2 # +/- 90 degrees
+cross_color = "white"
+stimulus_duration = 0.5
+between_stimuli = 2.0
+n_x = 2
+stimulus = "X"
+all_letters = ["M", "N", "Y", "A", "U", "H"]
+all_letters = all_letters + (["X"] * n_x)
+```
+ 
