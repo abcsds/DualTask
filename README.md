@@ -1,4 +1,4 @@
-# Dual Task
+# Dual Task: LSL branch
 
 Task for dual attention paradigm. Task 1 is a cursor persecution task and task 2 is a Go-NoGo task. Designed for Psychopy (2024.1.5). Requires pointer device (mouse suggested).
 
@@ -19,3 +19,6 @@ all_letters = ["M", "N", "Y", "A", "U", "H"]
 all_letters = all_letters + (["X"] * n_x)
 ```
  
+## Setting up LSL
+
+Install pylsl: `"C:\Program Files\PsychoPy\python.exe" -m pip install pylsl` or just `python -m pip install pylsl`.
